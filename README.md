@@ -1,4 +1,7 @@
+
 # Ezone Attendance Calculator Toggle Extension
+# Note
+**This is an unofficial private project and is not associated with any university or organization.**
 
 ## Overview
 The **Attendance Toggle** Chrome extension provides a simple toggle switch to enable or disable attendance tracking. 
