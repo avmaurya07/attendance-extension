@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Attendance Calculator",
+  "version": "1.0",
+  "description": "Check whether you can skip classes or need to attend based on attendance.",
+  "permissions": ["storage"],
+  "host_permissions": ["*://*/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
