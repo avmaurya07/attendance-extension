@@ -1,16 +1,17 @@
 {
-  "manifest_version": 3,
-  "name": "Attendance Calculator",
+  "manifest_version": 2,
+  "name": "Sharda Attendance Calculator",
   "version": "1.0",
   "description": "Check whether you can skip classes or need to attend based on attendance.",
-  "permissions": ["storage"],
-  "host_permissions": ["*://*/*"],
-  "action": {
+  "permissions": ["storage", "<all_urls>"],
+
+  "browser_action": {
     "default_popup": "popup.html"
   },
+
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ]

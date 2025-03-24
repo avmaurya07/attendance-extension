@@ -1,14 +1,19 @@
-chrome.storage.sync.get(["attendanceEnabled"], function (data) {
-    if (data.attendanceEnabled) {
-        runAttendanceScript(); 
+const extAPI = typeof browser !== "undefined" ? browser : chrome;
+
+// Get stored attendance setting safely
+extAPI.storage.sync.get(["attendanceEnabled"], function (data) {
+    let isEnabled = (data && data.attendanceEnabled !== undefined) ? data.attendanceEnabled : true; // Default: ON
+    if (isEnabled) {
+        runAttendanceScript();
     }
 });
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+// Listen for messages from popup.js
+extAPI.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === "enable") {
         runAttendanceScript();
     } else if (message.action === "disable") {
-        location.reload(); 
+        location.reload();
     }
 });
 
@@ -23,7 +28,6 @@ function runAttendanceScript() {
 
     let tableRows = tableBody.querySelectorAll("tr");
 
-    // let headerRow = document.querySelector("#table1 thead tr tr");
     let headerRow = document.querySelector("#table1 thead tr:nth-of-type(2)");
     if (headerRow && !headerRow.querySelector(".canSkipHeader")) {
         let skipHeader = document.createElement("th");

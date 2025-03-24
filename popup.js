@@ -1,23 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
     let toggleButton = document.getElementById("toggleButton");
 
-    // Load saved state from Chrome storage
-    chrome.storage.sync.get(["attendanceEnabled"], function (data) {
+    // Use chrome.storage or browser.storage based on the browser
+    const storage = typeof browser !== "undefined" ? browser.storage : chrome.storage;
+    const tabsAPI = typeof browser !== "undefined" ? browser.tabs : chrome.tabs;
+
+    // Load saved state from browser storage
+    storage.sync.get(["attendanceEnabled"], function (data) {
         let isEnabled = data.attendanceEnabled ?? true; // Default: ON
         updateButton(isEnabled);
     });
 
     toggleButton.addEventListener("click", function () {
-        chrome.storage.sync.get(["attendanceEnabled"], function (data) {
+        storage.sync.get(["attendanceEnabled"], function (data) {
             let isEnabled = !data.attendanceEnabled; // Toggle state
 
-            chrome.storage.sync.set({ attendanceEnabled: isEnabled }, function () {
+            storage.sync.set({ attendanceEnabled: isEnabled }, function () {
                 updateButton(isEnabled);
 
                 // Send message to content script to enable/disable functionality
-                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                tabsAPI.query({ active: true, currentWindow: true }, function (tabs) {
                     if (tabs[0]?.id) {
-                        chrome.tabs.sendMessage(tabs[0].id, { action: isEnabled ? "enable" : "disable" });
+                        tabsAPI.sendMessage(tabs[0].id, { action: isEnabled ? "enable" : "disable" });
                     }
                 });
             });
@@ -25,9 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function updateButton(isEnabled) {
-        // toggleButton.textContent = isEnabled ? "ON" : "OFF";
-        // toggleButton.classList.toggle("OFF", !isEnabled);
         toggleButton.checked = isEnabled; // Ensure checkbox reflects the state
-
     }
 });
